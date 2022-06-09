@@ -17,21 +17,34 @@ class ApiController extends Controller
     //retorna todas as pessoas
     public function getPessoas()
     {
+        $pessoas = Pessoas::get()->toJson(JSON_PRETTY_PRINT);
+        return response($pessoas, 200);
+        //todas as pessoas
     }
 
     //retorna a pessoa do ID    
     public function getPessoa($id)
     {
+        //pega uma pessoa apenas
+
+        if (Pessoas::where('id', $id)->exists()) {
+            $pessoa = Pessoas::where('id', $id)->get()->toJson(JSON_PRETTY_PRINT);
+            return response($pessoa, 200);
+        } else {
+            return response()->json([
+                "message" => "Pessoa não existe"
+            ], 404);
+        }
     }
 
     //cria uma pessoa no banco de dados
     public function createPessoa(Request $request)
     {
-        $novaPessoa = new Pessoa;
-        $novaPessoa->id = $request->id;
-        $novaPessoa->nome = $request->nome;
-        $novaPessoa->email = $request->email;
-        $novaPessoa->save();
+        $Pessoa = new Pessoa;
+        $Pessoa->id = $request->id;
+        $Pessoa->nome = $request->nome;
+        $Pessoa->email = $request->email;
+        $Pessoa->save();
 
         return response()->json([
             "message" => "Pessoa criada com sucesso!"
@@ -46,6 +59,19 @@ class ApiController extends Controller
     //apaga a pessoa do banco de dados
     public function deletePessoa($id)
     {
+        //pega uma pessoa apenas
+
+        if (Pessoas::where('id', $id)->exists()) {
+            $pessoa = Pessoas::find($id);
+            $pessoa->delete();
+            return response()->json([
+                "message" => "Pessoa excluída com sucesso"
+            ], 202);
+        } else {
+            return response()->json([
+                "message" => "Pessoa não existe"
+            ], 404);
+        }
     }
 
     /**

@@ -1,4 +1,4 @@
-<!-- <?php 
+<?php 
 namespace App\Services;
 
 use Ill
@@ -15,4 +15,4 @@ class AulaService {
         $response = Http::get()
         dd($response);
     }
-}    -->
+}   
